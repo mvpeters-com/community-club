@@ -1,5 +1,6 @@
 import {cn} from "~/lib/utils";
 import AdminNavItems from '~/components/admin/layout/AdminNavItems';
+import {NAV_ITEMS} from '~/data/nav-items';
 
 export default function AdminSidebar() {
     return (
@@ -13,18 +14,7 @@ export default function AdminSidebar() {
                             Admin
                         </h2>
 
-                        <AdminNavItems items={[
-                            {
-                                title: "Dashboard",
-                                href: "/admin",
-                                icon: "home",
-                            },
-                            {
-                                title: "Users",
-                                href: "/admin/users",
-                                icon: "users",
-                            }
-                        ]}/>
+                        <AdminNavItems items={NAV_ITEMS}/>
                     </div>
                 </div>
             </div>

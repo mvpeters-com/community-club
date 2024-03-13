@@ -1,8 +1,8 @@
 // import ThemeToggle from "@/components/layout/ThemeToggle/theme-toggle";
 import {AdminUserNav} from "./adminUserNav";
+import {AdminMobileSidebar} from '~/components/admin/layout/AdminMobileSidebar';
 import {cn} from "~/lib/utils";
 import Link from "next/link";
-import AdminMobileSidebar from '~/components/admin/layout/AdminMobileSidebar';
 
 export default function Header() {
     return (
@@ -11,8 +11,7 @@ export default function Header() {
             <nav className="h-14 flex items-center justify-between px-4">
                 <div className="hidden lg:block">
                     <Link
-                        href={"https://github.com/Kiranism/next-shadcn-dashboard-starter"}
-                        target="_blank"
+                        href={"/admin"}
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
