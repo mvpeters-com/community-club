@@ -6,28 +6,12 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import {TRPCError, initTRPC} from "@trpc/server";
+import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
-import {ZodError} from "zod";
-import {db} from "~/server/db";
-import {
-    getAuth,
-    clerkClient,
-    SignedInAuthObject,
-    SignedOutAuthObject,
-    auth
-} from '@clerk/nextjs/server';
-import {type CreateNextContextOptions} from '@trpc/server/adapters/next';
+import { ZodError } from "zod";
+import type { getAuth } from "@clerk/nextjs/server";
 
-interface AuthContext {
-    auth: SignedInAuthObject | SignedOutAuthObject;
-}
-
-export const createContextInner = async ({auth}: AuthContext) => {
-    return {
-        auth,
-    }
-}
+import { db } from "~/server/db";
 
 /**
  * 1. CONTEXT
@@ -42,16 +26,13 @@ export const createContextInner = async ({auth}: AuthContext) => {
  * @see https://trpc.io/docs/server/context
  */
 
-export const createTRPCContext = async (opts: CreateNextContextOptions) => {
-    const {req} = opts;
-
-    const auth = getAuth(req);
-
-    return {
-        db,
-        auth,
-        ...opts,
-    };
+export const createTRPCContext = async (opts: {
+  auth: ReturnType<typeof getAuth>;
+}) => {
+  return {
+    db,
+    ...opts,
+  };
 };
 
 /**
@@ -62,18 +43,24 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
  * errors on the backend.
  */
 const t = initTRPC.context<typeof createTRPCContext>().create({
-    transformer: superjson,
-    errorFormatter({shape, error}) {
-        return {
-            ...shape,
-            data: {
-                ...shape.data,
-                zodError:
-                    error.cause instanceof ZodError ? error.cause.flatten() : null,
-            },
-        };
-    },
+  transformer: superjson,
+  errorFormatter({ shape, error }) {
+    return {
+      ...shape,
+      data: {
+        ...shape.data,
+        zodError:
+          error.cause instanceof ZodError ? error.cause.flatten() : null,
+      },
+    };
+  },
 });
+
+/**
+ * Create a server-side caller
+ * @see https://trpc.io/docs/server/server-side-calls
+ */
+export const createCallerFactory = t.createCallerFactory;
 
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
@@ -89,18 +76,6 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  */
 export const createTRPCRouter = t.router;
 
-
-const isAuthed = t.middleware(({next, ctx}) => {
-    if (!ctx.auth.userId) {
-        throw new TRPCError({code: 'UNAUTHORIZED'})
-    }
-    return next({
-        ctx: {
-            auth: ctx.auth,
-        },
-    })
-})
-
 /**
  * Public (unauthenticated) procedure
  *
@@ -109,4 +84,29 @@ const isAuthed = t.middleware(({next, ctx}) => {
  * are logged in.
  */
 export const publicProcedure = t.procedure;
-export const protectedProcedure = t.procedure.use(isAuthed)
+
+/**
+ * Reusable middleware that enforces users are logged in before running the
+ * procedure
+ */
+const enforceUserIsAuthed = t.middleware(({ next, ctx }) => {
+  if (!ctx.auth.userId) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({
+    ctx: {
+      auth: ctx.auth,
+    },
+  });
+});
+
+/**
+ * Protected (authed) procedure
+ *
+ * If you want a query or mutation to ONLY be accessible to logged in users, use
+ * this. It verifies the session is valid and guarantees ctx.session.user is not
+ * null
+ *
+ * @see https://trpc.io/docs/procedures
+ */
+export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
