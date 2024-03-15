@@ -13,10 +13,12 @@ import {Input} from "./input";
 import {Button} from "./button";
 import {ScrollArea, ScrollBar} from '~/components/ui/scroll-area';
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '~/components/ui/table';
+import useTranslation from 'next-translate/useTranslation';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    isLoading?: boolean;
     searchKey: string;
 }
 
@@ -24,7 +26,10 @@ export function DataTable<TData, TValue>({
                                              columns,
                                              data,
                                              searchKey,
+                                             isLoading,
                                          }: DataTableProps<TData, TValue>) {
+    const {t} = useTranslation('common')
+
     const table = useReactTable({
         data,
         columns,
@@ -108,15 +113,16 @@ export function DataTable<TData, TValue>({
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
                     >
-                        Previous
+                        {t('pagination.previous')}
                     </Button>
+
                     <Button
                         variant="outline"
                         size="sm"
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
                     >
-                        Next
+                        {t('pagination.next')}
                     </Button>
                 </div>
             </div>

@@ -8,6 +8,7 @@ import {cn} from "~/lib/utils"
 import AdminSidebar from '~/components/admin/layout/AdminSidebar';
 import Header from '~/components/admin/layout/AdminHeader';
 import {ClerkProvider} from '@clerk/nextjs';
+import useTranslation from 'next-translate/useTranslation';
 
 const fontSans = FontSans({
     subsets: ["latin"],
@@ -25,8 +26,10 @@ export default function RootLayout({
                                    }: {
     children: React.ReactNode;
 }) {
+    const {lang} = useTranslation('common')
+
     return <ClerkProvider>
-        <html lang="en">
+        <html lang={lang}>
         <body className={cn(
             "min-h-screen bg-background font-sans antialiased",
             fontSans.variable
