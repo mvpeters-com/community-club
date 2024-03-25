@@ -3,6 +3,7 @@ import {clerkClient} from '@clerk/nextjs/server';
 import {z} from 'zod';
 import {createUserSchema} from "~/lib/schemas/CreateUserSchema";
 import {inviteUserSchema} from '~/lib/schemas/InviteUserSchema';
+import {User} from '~/types';
 
 
 export const userRouter = createTRPCRouter({

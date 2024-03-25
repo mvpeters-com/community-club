@@ -3,7 +3,7 @@ import {MenuIcon} from "lucide-react";
 import {useState} from "react";
 import AdminNavItems from '~/components/admin/layout/AdminNavItems';
 import {Sheet, SheetContent, SheetTrigger} from "~/components/ui/sheet";
-import {NAV_ITEMS} from '~/data/nav-items';
+import {NAV_ITEMS} from '~/lib/data/nav-items';
 
 export function AdminMobileSidebar() {
     const [open, setOpen] = useState(false);

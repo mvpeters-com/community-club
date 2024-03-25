@@ -7,7 +7,7 @@ import {usePathname} from "next/navigation";
 
 import {Icons} from '~/components/Icons';
 import {cn} from '~/lib/utils';
-import {type NavItem} from "../../types";
+import {type NavItem} from "../../../types";
 
 interface DashboardNavProps {
     items: NavItem[];

@@ -4,6 +4,6 @@
     "pages": {
         "*": ["common"],
         "/admin": ["admin"],
-        "/admin/*": ["admin"]
+        "/admin/users": ["admin"]
     }
 }

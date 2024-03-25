@@ -9,6 +9,7 @@ import AdminSidebar from '~/components/admin/layout/AdminSidebar';
 import Header from '~/components/admin/layout/AdminHeader';
 import {ClerkProvider} from '@clerk/nextjs';
 import useTranslation from 'next-translate/useTranslation';
+import {Toaster} from '~/components/ui/sonner';
 
 const fontSans = FontSans({
     subsets: ["latin"],
@@ -41,6 +42,7 @@ export default function RootLayout({
                 <main className="w-full pt-16">{children}</main>
             </div>
         </TRPCReactProvider>
+        <Toaster />
         </body>
         </html>
     </ClerkProvider>

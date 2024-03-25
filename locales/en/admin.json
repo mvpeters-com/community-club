@@ -2,6 +2,6 @@
   "users": {
     "name": "Name",
     "email": "Email",
-    "isAdmin": "Is Admin"
+    "isAdmin": "Admin"
   }
 }

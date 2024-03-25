@@ -1,6 +1,6 @@
 import {cn} from "~/lib/utils";
 import AdminNavItems from '~/components/admin/layout/AdminNavItems';
-import {NAV_ITEMS} from '~/data/nav-items';
+import {NAV_ITEMS} from '~/lib/data/nav-items';
 
 export default function AdminSidebar() {
     return (
