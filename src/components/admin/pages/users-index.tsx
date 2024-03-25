@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useState} from 'react';
+import React, {useState, useTransition} from 'react';
 
 import {MoreVertical, Plus, Trash} from "lucide-react";
 import {Button} from '~/components/ui/button';
@@ -21,15 +21,6 @@ import {
 import {ConfirmDialog} from '~/components/common/ComfirmDialog';
 import {api} from '~/trpc/react';
 import {serverRevalidatePath} from '~/lib/revalidate';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription, DialogFooter,
-    DialogHeader,
-    DialogTitle
-} from '~/components/ui/dialog';
-import {Label} from '~/components/ui/label';
-import {Input} from '~/components/ui/input';
 import {toast} from 'sonner';
 import {ModalButton} from '~/components/common/ModalButton';
 import {InviteUserModal} from '~/components/admin/modals/InviteUserModal';
@@ -44,11 +35,25 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({data}) => {
+    const {t} = useTranslation('admin');
+
     const [isDeleteModalOpen,
         setIsDeleteModalOpen
     ] = useState(false);
 
-    const {mutate: deleteUser, isLoading: isDeleteLoading} = api.user.deleteUser.useMutation()
+    const {mutate: deleteUser, isLoading: isDeleteLoading} = api.user.deleteUser.useMutation({
+        onSuccess: () => {
+            toast.success(t('users.delete.success'));
+        },
+        onError: (error) => {
+            toast.error(t('users.delete.error'));
+            console.error(error);
+        },
+        onSettled: () => {
+            setIsDeleteModalOpen(false);
+            serverRevalidatePath('/admin/users');
+        }
+    })
 
     return (
         <>
@@ -70,7 +75,6 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="end">
-
                     <DropdownMenuItem onClick={() => setIsDeleteModalOpen(true)}>
                         <Trash className="mr-2 h-4 w-4"/> Delete
                     </DropdownMenuItem>
@@ -80,11 +84,10 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
     )
 }
 
+export const dynamic = 'force-dynamic'
 
 export const UsersIndex: React.FC<ProductsClientProps> = ({data, isLoading}) => {
-    const {t, lang} = useTranslation('admin');
-
-    console.log(lang, t('users.isAdmin'))
+    const {t} = useTranslation('admin');
 
     const columns: ColumnDef<User>[] = [
         // {
@@ -110,7 +113,7 @@ export const UsersIndex: React.FC<ProductsClientProps> = ({data, isLoading}) => 
         // },
         {
             accessorKey: "fullName",
-            header: t('users.name'),
+            header: t('users.table.name'),
             enableSorting: true,
             meta: {
                 skeleton: 'text',
@@ -118,14 +121,14 @@ export const UsersIndex: React.FC<ProductsClientProps> = ({data, isLoading}) => 
         },
         {
             accessorKey: "email",
-            header: t('users.email'),
+            header: t('users.table.email'),
             meta: {
                 skeleton: 'text',
             }
         },
         {
             accessorKey: "isAdmin",
-            header: t('users.isAdmin'),
+            header: t('users.table.isAdmin'),
             cell: ({getValue}) => getValue() ? "ja" : "nee",
             meta: {
                 skeleton: 'text',

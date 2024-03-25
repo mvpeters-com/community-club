@@ -2,5 +2,13 @@
   "pagination": {
     "next":  "Next",
     "previous": "Previous"
+  },
+  "dialog": {
+    "confirm": {
+      "title": "Confirm",
+      "description": "Are you sure?",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    }
   }
 }

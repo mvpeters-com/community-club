@@ -1,7 +1,18 @@
 {
   "users": {
-    "name": "Name",
-    "email": "Email",
-    "isAdmin": "Admin"
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "isAdmin": "Admin"
+    },
+    "invite": {
+      "button": "Invite",
+      "title": "Invite User",
+      "description": "Enter the email address of the user you would like to invite, they will receive an invitation e-mail.",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "success": "User invited successfully"
+    }
   }
 }

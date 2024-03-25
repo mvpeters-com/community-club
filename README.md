@@ -36,3 +36,43 @@ Open source online community management starter kit.
 - [ ] add user to moderator
 - [ ] remove user from moderator
 - [ ] make admin route protected
+
+### Database
+
+- [ ] Add database
+- [ ] Add seed structure
+
+### Spaces
+
+- [ ] Add discussion space type
+- [ ] Add event space type
+
+### General
+
+- [ ] Add tests
+- [ ] Add CI/CD
+- [ ] Add documentation
+- [x] Add license
+
+## Todo v1
+
+### user management
+
+- [ ] invite link
+- [ ] default spaces
+- [ ] default roles
+- [ ] custom message
+- [ ] multi invite
+- [ ] custom user fields
+- [ ] view pending invites
+- [ ] resend invite
+- [ ] delete invite
+
+### Forms
+
+- [ ] system for rendering API errors inline
+
+### user directory
+
+- [ ] list all users
+- [ ] user profile page
