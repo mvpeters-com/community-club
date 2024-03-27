@@ -1,4 +1,4 @@
-import {NavItem} from '~/types';
+import {type NavItem} from '~/types';
 
 export const NAV_ITEMS: NavItem[] = [
     {
@@ -10,5 +10,10 @@ export const NAV_ITEMS: NavItem[] = [
         title: "Users",
         href: "/admin/users",
         icon: "users",
+    },
+     {
+        title: "Spaces",
+        href: "/admin/spaces",
+        icon: "spaces",
     }
 ] as const;

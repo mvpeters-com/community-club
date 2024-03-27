@@ -14,5 +14,17 @@
       "email": "Email",
       "success": "User invited successfully"
     }
+  },
+  "spaces": {
+    "table": {
+      "name": "Name"
+    },
+    "add": {
+      "button": "Add Space",
+      "title": "Add Space",
+      "name": "Name",
+      "description": "Description",
+      "success": "Space added successfully"
+    }
   }
 }

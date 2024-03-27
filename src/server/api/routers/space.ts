@@ -7,7 +7,7 @@ import {eq} from 'drizzle-orm';
 export const spaceRouter = createTRPCRouter({
     getAll: adminProcedure
         .query(async ({ctx}) => {
-            await ctx.db.select().from(spaces);
+            return ctx.db.select().from(spaces);
         }),
 
     create: adminProcedure

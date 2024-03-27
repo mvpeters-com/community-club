@@ -1,9 +1,18 @@
 {
-    "locales": ["en", "nl"],
-    "defaultLocale": "en",
-    "pages": {
-        "*": ["common"],
-        "/admin": ["admin"],
-        "/admin/users": ["admin"]
-    }
+  "locales": [
+    "en",
+    "nl"
+  ],
+  "defaultLocale": "en",
+  "pages": {
+    "*": [
+      "common"
+    ],
+    "rgx:^/admin": [
+      "admin"
+    ],
+    "/admin/users": [
+      "admin"
+    ]
+  }
 }

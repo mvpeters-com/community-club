@@ -2,7 +2,7 @@ import {UsersIndex} from "~/components/admin/pages/users-index";
 import {unstable_noStore as noStore} from "next/cache";
 import {api} from '~/trpc/server';
 
-const AdminIndex = async () => {
+const AdminUsersIndex = async () => {
     noStore();
 
     const users = await api.user.getAll.query();
@@ -12,4 +12,4 @@ const AdminIndex = async () => {
     </div>
 }
 
-export default AdminIndex;
+export default AdminUsersIndex;
