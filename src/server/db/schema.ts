@@ -1,13 +1,13 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql } from "drizzle-orm";
 import {
-  index,
-  pgTableCreator,
-  serial,
-  timestamp,
-  varchar,
+    index,
+    pgTableCreator,
+    serial,
+    timestamp,
+    boolean,
+    varchar,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -18,17 +18,34 @@ import {
  */
 export const createTable = pgTableCreator((name) => `community-club_${name}`);
 
-export const posts = createTable(
-  "post",
-  {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updatedAt"),
-  },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-  })
+export const spaces = createTable(
+    "space",
+    {
+        id: serial("id").primaryKey(),
+        name: varchar("name", {length: 256}),
+        type: varchar("type", {length: 256}),
+        createdAt: timestamp("created_at")
+            .notNull().defaultNow(),
+        updatedAt: timestamp("updated_at")
+    },
+    (example) => ({
+        nameIndex: index("name_idx").on(example.name),
+    })
 );
+
+export const events = createTable("event", {
+    id: serial("id").primaryKey(),
+    name: varchar("title", {length: 256}).notNull(),
+    description: varchar("description", {length: 1024}).notNull(),
+    image: varchar("image", {length: 512}),
+    startDate: timestamp("start_date").notNull(),
+    endDate: timestamp("end_date"),
+    isOnline: boolean('boolean'),
+    location: varchar("location", {length: 512}),
+    spaceID: serial("space_id")
+        .notNull()
+        .references(() => spaces.id),
+});
+
+export type Space = typeof spaces.$inferSelect;
+export type Event = typeof events.$inferSelect;

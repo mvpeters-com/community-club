@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useTransition} from 'react';
+import React from 'react';
 import useTranslation from 'next-translate/useTranslation';
 import {api} from '~/trpc/react';
 import {toast} from 'sonner';
@@ -23,8 +23,8 @@ import {
     Form,
 } from '~/components/ui/form';
 
-import {type CreateUser, createUserSchema} from '~/lib/schemas/CreateUserSchema';
 import {FormInput} from '~/components/form/FormInput';
+import {CreateUser, createUserSchema} from '~/lib/schemas/users';
 
 export const InviteUserModal: React.FC = () => {
     const {t} = useTranslation('admin')

@@ -1,13 +1,12 @@
 "use client";
 
-import React, {useState, useTransition} from 'react';
+import React, {useState} from 'react';
 
 import {MoreVertical, Plus, Trash} from "lucide-react";
 import {Button} from '~/components/ui/button';
 import {Separator} from '~/components/ui/separator';
 import {Heading} from "~/components/ui/heading";
 import {DataTable} from "~/components/ui/data-table";
-import {type User} from "src/types";
 import {type ColumnDef} from '@tanstack/react-table';
 import useTranslation from 'next-translate/useTranslation';
 
@@ -24,14 +23,11 @@ import {serverRevalidatePath} from '~/lib/revalidate';
 import {toast} from 'sonner';
 import {ModalButton} from '~/components/common/ModalButton';
 import {InviteUserModal} from '~/components/admin/modals/InviteUserModal';
+import {type Space} from '~/server/db/schema';
 
-interface ProductsClientProps {
-    data: User[];
-    isLoading?: boolean;
-}
 
 interface CellActionProps {
-    data: User;
+    data: Space;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({data}) => {
@@ -41,17 +37,17 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
         setIsDeleteModalOpen
     ] = useState(false);
 
-    const {mutate: deleteUser, isLoading: isDeleteLoading} = api.user.delete.useMutation({
+    const {mutate: deleteSpace, isLoading: isDeleteLoading} = api.space.delete.useMutation({
         onSuccess: () => {
-            toast.success(t('users.delete.success'));
+            toast.success(t('spaces.delete.success'));
         },
         onError: (error) => {
-            toast.error(t('users.delete.error'));
+            toast.error(t('spaces.delete.error'));
             console.error(error);
         },
         onSettled: () => {
             setIsDeleteModalOpen(false);
-            serverRevalidatePath('/admin/users');
+            serverRevalidatePath('/admin/spaces');
         }
     })
 
@@ -61,7 +57,9 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
                 isOpen={isDeleteModalOpen}
                 isLoading={isDeleteLoading}
                 setOpen={setIsDeleteModalOpen}
-                onConfirm={() => deleteUser({id: data.id})}
+                onConfirm={() => deleteSpace({
+                    id: data.id
+                })}
             />
 
             <DropdownMenu modal={false}>
@@ -84,29 +82,20 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
 
 export const dynamic = 'force-dynamic'
 
-export const UsersIndex: React.FC<ProductsClientProps> = ({data, isLoading}) => {
+interface SpacesIndexProps {
+    data: Space[];
+    isLoading?: boolean;
+}
+
+
+export const SpacesIndex: React.FC<SpacesIndexProps> = ({data, isLoading}) => {
     const {t} = useTranslation('admin');
 
-    const columns: ColumnDef<User>[] = [
+    const columns: ColumnDef<Space>[] = [
         {
-            accessorKey: "fullName",
-            header: t('users.table.name'),
+            accessorKey: "name",
+            header: t('spaces.table.name'),
             enableSorting: true,
-            meta: {
-                skeleton: 'text',
-            }
-        },
-        {
-            accessorKey: "email",
-            header: t('users.table.email'),
-            meta: {
-                skeleton: 'text',
-            }
-        },
-        {
-            accessorKey: "isAdmin",
-            header: t('users.table.isAdmin'),
-            cell: ({getValue}) => getValue() ? "ja" : "nee",
             meta: {
                 skeleton: 'text',
             }
@@ -121,23 +110,22 @@ export const UsersIndex: React.FC<ProductsClientProps> = ({data, isLoading}) => 
         <>
             <div className="flex items-start justify-between">
                 <Heading
-                    title={isLoading ? `Users` : `Users (${data.length})`}
-                    description="Manage users and their permissions."
+                    title={isLoading ? `Spaces` : `Spaces (${data.length})`}
+                    description={t('spaces.table.description')}
                 />
 
                 <ModalButton
-                    modalId={'invite-user'}
+                    modalId={'add-space'}
                     disabled={isLoading}
                     className="text-xs md:text-sm"
                 >
-                    <Plus
-                        className="mr-2 h-4 w-4"/>{t('users.invite.button')}
+                    <Plus className="mr-2 h-4 w-4"/>{t('spaces.add.button')}
                 </ModalButton>
             </div>
 
             <Separator/>
 
-            <DataTable searchKey="fullName" isLoading={isLoading} columns={columns} data={data}/>
+            <DataTable searchKey="name" isLoading={isLoading} columns={columns} data={data}/>
 
             <InviteUserModal/>
         </>

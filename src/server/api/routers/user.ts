@@ -1,19 +1,16 @@
 import {adminProcedure, createTRPCRouter} from "../trpc";
 import {clerkClient} from '@clerk/nextjs/server';
 import {z} from 'zod';
-import {createUserSchema} from "~/lib/schemas/CreateUserSchema";
-import {inviteUserSchema} from '~/lib/schemas/InviteUserSchema';
-import {User} from '~/types';
-
+import {createUserSchema, inviteUserSchema} from "~/lib/schemas/users";
 
 export const userRouter = createTRPCRouter({
-    getAll: adminProcedure.query(async ({ctx}) => {
+    getAll: adminProcedure.query(async () => {
         const users = await clerkClient.users.getUserList({
             limit: 500,
         });
 
         return users.map((user) => {
-            const newUser: User = {
+            return {
                 id: user.id,
                 email: user.emailAddresses[0]?.emailAddress,
                 firstName: user.firstName,
@@ -21,24 +18,18 @@ export const userRouter = createTRPCRouter({
                 fullName: `${user.firstName} ${user.lastName}`,
                 isAdmin: !!user.publicMetadata?.admin ?? false,
             };
-
-            return newUser;
         });
     }),
 
-    deleteUser: adminProcedure
-        .input(
-            z.object({
-                userId: z.string(),
-            })
-        )
-        .mutation(({ctx, input}) => {
-            return clerkClient.users.deleteUser(input.userId);
+    delete: adminProcedure
+        .input(z.object({id: z.string()}))
+        .mutation(({input}) => {
+            return clerkClient.users.deleteUser(input.id);
         }),
 
-    inviteUser: adminProcedure
+    invite: adminProcedure
         .input(inviteUserSchema)
-        .mutation(async ({ctx, input}) => {
+        .mutation(async ({input}) => {
             try {
                 await clerkClient.allowlistIdentifiers.createAllowlistIdentifier({
                     identifier: input.email,
@@ -53,16 +44,14 @@ export const userRouter = createTRPCRouter({
             }
         }),
 
-    createUser: adminProcedure
+    create: adminProcedure
         .input(createUserSchema)
-        .mutation(async ({ctx, input}) => {
-            const user = await clerkClient.users.createUser({
+        .mutation(async ({input}) => {
+            return await clerkClient.users.createUser({
                 firstName: input.firstName,
                 lastName: input.lastName,
                 emailAddress: [input.emailAddress],
             });
-
-            return user;
         }),
 
     undoAdmin: adminProcedure
@@ -71,7 +60,7 @@ export const userRouter = createTRPCRouter({
                 userId: z.string(),
             })
         )
-        .mutation(({ctx, input}) => {
+        .mutation(({input}) => {
             return clerkClient.users.updateUser(input.userId, {
                 publicMetadata: {
                     admin: false,
@@ -85,7 +74,7 @@ export const userRouter = createTRPCRouter({
                 userId: z.string(),
             })
         )
-        .mutation(({ctx, input}) => {
+        .mutation(({input}) => {
             return clerkClient.users.updateUser(input.userId, {
                 publicMetadata: {
                     admin: true,
