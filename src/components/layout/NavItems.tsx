@@ -7,14 +7,14 @@ import {usePathname} from "next/navigation";
 
 import {Icons} from '~/components/Icons';
 import {cn} from '~/lib/utils';
-import {type NavItem} from "../../../types";
+import {type NavItem} from "~/types";
 
-interface DashboardNavProps {
+interface NavItemProps {
     items: NavItem[];
     setOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function AdminNavItems({items, setOpen}: DashboardNavProps) {
+export default function NavItems({items, setOpen}: NavItemProps) {
     const path = usePathname();
 
     if (!items?.length) {
@@ -43,7 +43,7 @@ export default function AdminNavItems({items, setOpen}: DashboardNavProps) {
                               )}
                           >
                             {Icon && <Icon className="mr-2 h-4 w-4"/>}
-                            <span>{item.title}</span>
+                              <span>{item.title}</span>
                           </span>
                         </Link>
                     )

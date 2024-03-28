@@ -1,9 +1,16 @@
 import "~/styles/globals.css";
 
 import {TRPCReactProvider} from "~/trpc/react";
+
 import {Inter as FontSans} from "next/font/google"
 
 import {cn} from "~/lib/utils"
+import Sidebar from '~/components/layout/Sidebar';
+import Header from '~/components/layout/Header';
+import {ClerkProvider} from '@clerk/nextjs';
+import useTranslation from 'next-translate/useTranslation';
+import {Toaster} from '~/components/ui/sonner';
+import {api} from '~/trpc/server';
 
 const fontSans = FontSans({
     subsets: ["latin"],
@@ -16,21 +23,37 @@ export const metadata = {
     icons: [{rel: "icon", url: "/favicon.ico"}],
 };
 
-export default function RootLayout({
-                                       children,
-                                   }: {
+
+export default async function RootLayout({
+                                             children,
+                                         }: {
     children: React.ReactNode;
 }) {
-    return (
-        <html lang="en">
+    const {lang} = useTranslation('common')
+    const spaces = await api.space.getAll.query();
+
+    const navItems = spaces.map(space => ({
+        title: `${space.name}`,
+        href: `/${space.type}/${space.slug}`,
+        icon: "spaces",
+    }));
+
+    return <ClerkProvider>
+        <html lang={lang}>
         <body className={cn(
             "min-h-screen bg-background font-sans antialiased",
             fontSans.variable
         )}>
         <TRPCReactProvider>
-            {children}
+            <Header navItems={navItems}/>
+            <div className="flex h-screen overflow-hidden">
+                <Sidebar navItems={navItems}/>
+
+                <main className="w-full pt-16">{children}</main>
+            </div>
         </TRPCReactProvider>
+        <Toaster/>
         </body>
         </html>
-    );
+    </ClerkProvider>
 }

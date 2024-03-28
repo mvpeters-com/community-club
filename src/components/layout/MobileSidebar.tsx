@@ -1,11 +1,18 @@
 "use client";
+
 import {MenuIcon} from "lucide-react";
 import {useState} from "react";
-import AdminNavItems from '~/components/admin/layout/AdminNavItems';
+import NavItems from '~/components/layout/NavItems';
 import {Sheet, SheetContent, SheetTrigger} from "~/components/ui/sheet";
-import {NAV_ITEMS} from '~/lib/data/nav-items';
+import {type NavItem} from '~/types';
 
-export function AdminMobileSidebar() {
+interface MobileSidebarProps {
+    navItems: NavItem[];
+}
+
+export function MobileSidebar({
+                                  navItems
+                              }: MobileSidebarProps) {
     const [open, setOpen] = useState(false);
     return (
         <>
@@ -20,7 +27,7 @@ export function AdminMobileSidebar() {
                                 Overview
                             </h2>
                             <div className="space-y-1">
-                                <AdminNavItems items={NAV_ITEMS} setOpen={setOpen}/>
+                                <NavItems items={navItems} setOpen={setOpen}/>
                             </div>
                         </div>
                     </div>

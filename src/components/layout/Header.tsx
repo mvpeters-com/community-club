@@ -1,17 +1,26 @@
-// import ThemeToggle from "@/components/layout/ThemeToggle/theme-toggle";
-import {AdminUserNav} from "./adminUserNav";
-import {AdminMobileSidebar} from '~/components/admin/layout/AdminMobileSidebar';
-import {cn} from "~/lib/utils";
 import Link from "next/link";
 
-export default function Header() {
+import {UserNav} from "./userNav";
+import {MobileSidebar} from '~/components/layout/MobileSidebar';
+import {cn} from "~/lib/utils";
+import {type NavItem} from '~/types';
+
+interface HeaderProps {
+    homeUrl?: string;
+    navItems?: NavItem[];
+}
+
+export default function Header({
+                                   homeUrl = '/',
+                                   navItems,
+                               }: HeaderProps) {
     return (
         <div
             className="fixed top-0 left-0 right-0 supports-backdrop-blur:bg-background/60 border-b bg-background/95 backdrop-blur z-20">
             <nav className="h-14 flex items-center justify-between px-4">
                 <div className="hidden lg:block">
                     <Link
-                        href={"/admin"}
+                        href={homeUrl}
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -28,13 +37,12 @@ export default function Header() {
                         </svg>
                     </Link>
                 </div>
-                <div className={cn("block lg:!hidden")}>
-                    <AdminMobileSidebar/>
-                </div>
+                {navItems && <div className={cn("block lg:!hidden")}>
+                  <MobileSidebar navItems={navItems}/>
+                </div>}
 
                 <div className="flex items-center gap-2">
-                    <AdminUserNav/>
-                    {/*<ThemeToggle />*/}
+                    <UserNav/>
                 </div>
             </nav>
         </div>

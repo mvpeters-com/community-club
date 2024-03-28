@@ -101,6 +101,21 @@ export const SpacesIndex: React.FC<SpacesIndexProps> = ({data, isLoading}) => {
             }
         },
         {
+            accessorKey: "slug",
+            header: t('spaces.table.slug'),
+            enableSorting: true,
+            meta: {
+                skeleton: 'text',
+            }
+        },
+        {
+            accessorKey: "type",
+            header: t('spaces.table.type'),
+            meta: {
+                skeleton: 'text',
+            },
+        },
+        {
             id: "actions",
             cell: ({row}) => <CellAction data={row.original}/>,
         },

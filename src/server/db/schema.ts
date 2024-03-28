@@ -23,6 +23,7 @@ export const spaces = createTable(
     {
         id: serial("id").primaryKey(),
         name: varchar("name", {length: 256}),
+        slug: varchar("slug", {length: 256}),
         type: varchar("type", {length: 256}),
         createdAt: timestamp("created_at")
             .notNull().defaultNow(),
@@ -36,6 +37,7 @@ export const spaces = createTable(
 export const events = createTable("event", {
     id: serial("id").primaryKey(),
     name: varchar("title", {length: 256}).notNull(),
+    slug: varchar("slug", {length: 256}),
     description: varchar("description", {length: 1024}).notNull(),
     image: varchar("image", {length: 512}),
     startDate: timestamp("start_date").notNull(),

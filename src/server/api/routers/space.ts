@@ -3,6 +3,7 @@ import {spaces} from "~/server/db/schema";
 import {createSpaceSchema, updateSpaceSchema} from '~/lib/schemas/spaces';
 import {z} from "zod";
 import {eq} from 'drizzle-orm';
+import {slugify} from "~/lib/utils";
 
 export const spaceRouter = createTRPCRouter({
     getAll: adminProcedure
@@ -16,6 +17,7 @@ export const spaceRouter = createTRPCRouter({
             return ctx.db.insert(spaces).values([
                 {
                     name: input.name,
+                    slug: slugify(input.name),
                     type: input.type,
                     updatedAt: new Date(),
                 }

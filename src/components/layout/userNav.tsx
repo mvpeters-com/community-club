@@ -2,7 +2,7 @@
 
 import {UserButton, useUser} from '@clerk/nextjs';
 
-export function AdminUserNav() {
+export function UserNav() {
     const {
         isSignedIn
     } = useUser()
