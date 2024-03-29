@@ -45,7 +45,9 @@ Open source online community management starter kit.
 ### Spaces
 
 - [ ] Add discussion space type
-- [ ] Add event space type
+- [x] Add events space type
+- [ ] show future events in space
+- [ ] if online, create livekit room
 
 ### General
 

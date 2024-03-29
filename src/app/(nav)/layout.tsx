@@ -7,10 +7,11 @@ import {Inter as FontSans} from "next/font/google"
 import {cn} from "~/lib/utils"
 import Sidebar from '~/components/layout/Sidebar';
 import Header from '~/components/layout/Header';
-import {ClerkProvider} from '@clerk/nextjs';
 import useTranslation from 'next-translate/useTranslation';
 import {Toaster} from '~/components/ui/sonner';
 import {api} from '~/trpc/server';
+
+import {ClerkProvider} from '@clerk/nextjs';
 
 const fontSans = FontSans({
     subsets: ["latin"],
@@ -23,6 +24,10 @@ export const metadata = {
     icons: [{rel: "icon", url: "/favicon.ico"}],
 };
 
+const iconMap: Record<string, string> = {
+    events: "calendar",
+    discussion: "message-circle",
+}
 
 export default async function RootLayout({
                                              children,
@@ -35,7 +40,7 @@ export default async function RootLayout({
     const navItems = spaces.map(space => ({
         title: `${space.name}`,
         href: `/${space.type}/${space.slug}`,
-        icon: "spaces",
+        icon: iconMap[space.type!],
     }));
 
     return <ClerkProvider>

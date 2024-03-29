@@ -1,6 +1,7 @@
 import {
     AlertTriangle,
     ArrowRight,
+    Calendar,
     Check,
     ChevronLeft,
     ChevronRight,
@@ -15,8 +16,8 @@ import {
     LayoutDashboardIcon,
     Loader2,
     LogIn,
-    LucideIcon,
-    LucideProps,
+    type LucideIcon,
+    MessageCircle,
     Moon,
     MoreVertical,
     Pizza,
@@ -33,6 +34,8 @@ import {
 export type Icon = LucideIcon;
 
 export const Icons: Record<string, Icon> = {
+    calendar: Calendar,
+    'message-circle': MessageCircle,
     dashboard: LayoutDashboardIcon,
     logo: Command,
     login: LogIn,

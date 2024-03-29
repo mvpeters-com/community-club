@@ -1,4 +1,4 @@
-import {createTRPCRouter, adminProcedure} from "~/server/api/trpc";
+import {createTRPCRouter, adminProcedure, protectedProcedure} from "~/server/api/trpc";
 import {spaces} from "~/server/db/schema";
 import {createSpaceSchema, updateSpaceSchema} from '~/lib/schemas/spaces';
 import {z} from "zod";
@@ -6,7 +6,7 @@ import {eq} from 'drizzle-orm';
 import {slugify} from "~/lib/utils";
 
 export const spaceRouter = createTRPCRouter({
-    getAll: adminProcedure
+    getAll: protectedProcedure
         .query(async ({ctx}) => {
             return ctx.db.select().from(spaces);
         }),

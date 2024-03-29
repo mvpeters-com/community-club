@@ -9,6 +9,7 @@ import {
     boolean,
     varchar,
 } from "drizzle-orm/pg-core";
+import {relations} from 'drizzle-orm/relations';
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -34,12 +35,16 @@ export const spaces = createTable(
     })
 );
 
+export const spaceRelations = relations(spaces, ({many}) => ({
+    events: many(events),
+}));
+
 export const events = createTable("event", {
     id: serial("id").primaryKey(),
     name: varchar("title", {length: 256}).notNull(),
     slug: varchar("slug", {length: 256}),
     description: varchar("description", {length: 1024}).notNull(),
-    image: varchar("image", {length: 512}),
+    cover: varchar("image", {length: 512}),
     startDate: timestamp("start_date").notNull(),
     endDate: timestamp("end_date"),
     isOnline: boolean('boolean'),
@@ -48,6 +53,14 @@ export const events = createTable("event", {
         .notNull()
         .references(() => spaces.id),
 });
+
+export const eventsRelations = relations(events, ({one}) => ({
+    author: one(spaces, {
+        fields: [events.spaceID],
+        references: [spaces.id],
+    }),
+}));
+
 
 export type Space = typeof spaces.$inferSelect;
 export type Event = typeof events.$inferSelect;

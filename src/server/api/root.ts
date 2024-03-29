@@ -1,6 +1,7 @@
 import {spaceRouter} from "~/server/api/routers/space";
 import {createCallerFactory, createTRPCRouter} from "~/server/api/trpc";
 import {userRouter} from '~/server/api/routers/user';
+import {eventRouter} from '~/server/api/routers/event';
 
 /**
  * This is the primary router for your server.
@@ -10,6 +11,7 @@ import {userRouter} from '~/server/api/routers/user';
 export const appRouter = createTRPCRouter({
     space: spaceRouter,
     user: userRouter,
+    event: eventRouter,
 });
 
 // export type definition of API
